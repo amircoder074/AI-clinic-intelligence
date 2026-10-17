@@ -1,4 +1,4 @@
-# Clinic Analytics Demo 
+# Clinic Analytics Demo
 
 This clinic contains three important roles like patient - doctor - session 
 
