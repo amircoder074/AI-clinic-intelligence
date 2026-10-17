@@ -13,6 +13,7 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
 
+## Create a new class 1
 @dataclass
 class Clinic:
     name : str
@@ -24,6 +25,7 @@ class Clinic:
     def __post_init__(self):
         self.all_clinics.append(self)
 
+## Create a new class 2
 @dataclass
 class Darmangar:
     clinic : Clinic
@@ -91,6 +93,7 @@ class Darmangar:
         cls.c1 = c1
         cls.c2 = c2
 
+## Create a new class 3
 @dataclass
 class Moraje:
     clinic : Clinic
@@ -151,6 +154,7 @@ class Moraje:
         print("Deleted Vaziat!")
         self._vaziat = None
 
+## Create a new class 4
 @dataclass 
 class Jalase: 
     clinic : Clinic
