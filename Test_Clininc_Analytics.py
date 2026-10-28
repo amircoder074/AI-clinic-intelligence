@@ -47,7 +47,18 @@ class TestClinic_Analytics(unittest.TestCase) :
     def test_Darmangar_tedad_gheibat(self):
         clinic = Clinic_Analytics.Clinic("Clinic C")
         darmangar = Clinic_Analytics.Darmangar(clinic, "Dr. Mahmudi", "Ade", "D003", 9144569874, "goftardarmani", 5)
-        
+        moraje = Clinic_Analytics.Moraje(clinic, darmangar, "sania", "musavi", "M003", 1258796412, "Falaje maghzi", "Jame vije")
+
+        # Simulate adding sessions for the darmangar
+        clinic.jalasat[darmangar.code] = {
+            moraje.code: [
+                (1, 2, True,True),  # Attended session
+                (3, 4, False,True),  # Missed session
+                (5, 6, False,True)   # Attended session
+            ]
+        }
+
+        self.assertEqual(darmangar.tedad_gheibat(clinic=clinic, moraje_code="M003"),2)
 
 if __name__ == "__main__":
     unittest.main()
