@@ -1,64 +1,47 @@
 import unittest
-import Clinic_Analytics
+from Clinic_Analytics import Clinic, Darmangar, Moraje, Jalase
 
 class TestClinic_Analytics(unittest.TestCase) :
 
-    def test_Moraje_sabt_moraje(self):
-        clinic = Clinic_Analytics.Clinic("Khane Roshd")
-        darmangar = Clinic_Analytics.Darmangar(clinic, "mamad", "ahmadi", "2110566450", 911512615, "kardarnmani", 5)
-        moraje = Clinic_Analytics.Moraje(clinic, darmangar, "saeed", "mortazavi", "2121061185", 9122154789, "loknat","Hami")
-        moraje.sabt_moraje()
-        self.assertIn(moraje.code, clinic.morajein)
-        self.assertEqual(clinic.morajein[moraje.code], "saeed mortazavi")
+    @classmethod
+    def setUpClass(self): 
+        print("setup class started")
+        self.clinic = Clinic("Clinic A")
+        self.darmangar = Darmangar(self.clinic, "Dr. Due", "Rogan", "D001", 9102587964, "kardarnmani", 5)
+        self.moraje = Moraje(self.clinic, self.darmangar, "Goe", "Antimuli", "M001", 9135698741, "cp","Jame vije")
 
+        self.darmangar.sabt_darmangar()
+        self.moraje.sabt_moraje()
+
+        self.j_1 = Jalase(self.clinic, self.darmangar, self.moraje,True,True)
+        self.j_2 = Jalase(self.clinic, self.darmangar, self.moraje,True,False)
+        self.j_3 = Jalase(self.clinic, self.darmangar, self.moraje,False,True)
+
+        self.j_1.sabt_jalaseh()
+        self.j_2.sabt_jalaseh()
+        self.j_3.sabt_jalaseh()
+    
+    @classmethod
+    def tearDownClass(self):
+        print("teardown class ended")
+
+    def test_Moraje_sabt_moraje(self):
+        print("test_Moraje_sabt_moraje")
+        self.assertIn(self.moraje.code, self.clinic.morajein)
+        self.assertEqual(self.clinic.morajein[self.moraje.code], "Goe Antimuli")
 
     def test_Moraje_tedad_jalasat_va_gheibat(self):
-        clinic = Clinic_Analytics.Clinic("Clinic A")
-        darmangar = Clinic_Analytics.Darmangar(clinic, "Dr. John", "Doe", "D001", 9121215689, "goftardarmani", 3)
-        moraje = Clinic_Analytics.Moraje(clinic, darmangar, "Jane", "Smith", "M001", 1234567890, "None", "Hami")
-
-        # Simulate adding sessions for the moraje
-        clinic.jalasat[darmangar.code] = {
-            moraje.code: [
-                (1, 2, True, True),  # Attended session
-                (3, 4, True, False),  # Missed session
-                (5, 6, True, True)   # Attended session
-            ]
-        }
-
-        self.assertEqual(moraje.tedad_jalasat(), 2)  # Should count only attended sessions
-        self.assertEqual(moraje.tedad_gheibat(), 1)  # Should count only missed sessions
+        print("test_Moraje_tedad_jalasat_va_gheibat")
+        self.assertEqual(self.moraje.tedad_jalasat(), 1)
+        self.assertEqual(self.moraje.tedad_gheibat(), 1)
 
     def test_Moraje_hazineh_pardakhti(self):
-        clinic = Clinic_Analytics.Clinic("Clinic B")
-        darmangar = Clinic_Analytics.Darmangar(clinic, "Dr. Arabi", "Goe", "D002", 9157564789, "kardarmani", 4)
-        moraje = Clinic_Analytics.Moraje(clinic, darmangar, "mania", "bardi", "M002", 1258793217, "Kalam", "Jame")
-
-        j_1 = Clinic_Analytics.Jalase(clinic, darmangar, moraje,True,True)
-        j_2 = Clinic_Analytics.Jalase(clinic, darmangar, moraje,True,True)
-        j_3 = Clinic_Analytics.Jalase(clinic, darmangar, moraje,False,True)
-
-        j_1.sabt_jalaseh()
-        j_2.sabt_jalaseh()
-        j_3.sabt_jalaseh()
-
-        self.assertEqual(moraje.hazineh_pardakhti(clinic=clinic, darmangar=darmangar), 1000000)
+        print("test_Moraje_hazineh_pardakhti")
+        self.assertEqual(self.moraje.hazineh_pardakhti(self.clinic, self.darmangar), 900000)
 
     def test_Darmangar_tedad_gheibat(self):
-        clinic = Clinic_Analytics.Clinic("Clinic C")
-        darmangar = Clinic_Analytics.Darmangar(clinic, "Dr. Mahmudi", "Ade", "D003", 9144569874, "goftardarmani", 5)
-        moraje = Clinic_Analytics.Moraje(clinic, darmangar, "sania", "musavi", "M003", 1258796412, "Falaje maghzi", "Jame vije")
-
-        # Simulate adding sessions for the darmangar
-        clinic.jalasat[darmangar.code] = {
-            moraje.code: [
-                (1, 2, True,True),  # Attended session
-                (3, 4, False,True),  # Missed session
-                (5, 6, False,True)   # Attended session
-            ]
-        }
-
-        self.assertEqual(darmangar.tedad_gheibat(clinic=clinic, moraje_code="M003"),2)
+        print("test_Darmangar_tedad_gheibat")
+        self.assertEqual(self.darmangar.tedad_gheibat(self.clinic, "M001"),1)
 
 if __name__ == "__main__":
     unittest.main()
