@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from utils.index_validation import barresi_code
 from typing import ClassVar
 import datetime
 import logging
@@ -13,6 +14,7 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
 
+## Create a new class 1
 @dataclass
 class Clinic:
     name : str
@@ -24,6 +26,7 @@ class Clinic:
     def __post_init__(self):
         self.all_clinics.append(self)
 
+## Create a new class 2
 @dataclass
 class Darmangar:
     clinic : Clinic
@@ -35,7 +38,7 @@ class Darmangar:
     sabeghe : float
     
     def sabt_darmangar(self):
-        if self.code not in self.clinic.darmangaran.keys() : 
+        if self.code not in self.clinic.darmangaran.keys() and barresi_code(self.code) is True : 
             self.clinic.darmangaran[self.code] = self.first_name + " " + self.last_name
         else : 
             print('{} dar list darmangaran hast..!'.format(self.first_name, self.last_name))
@@ -65,24 +68,6 @@ class Darmangar:
     def moshakhasat_darmangar(self):
         return '{} {} - {} - {}'.format(self.first_name, self.last_name, self.takhasos, self.sabeghe)
 
-    @staticmethod
-    def barresi_code(code : str):
-        if len(code) != 10 or not code.isdigit():
-            raise ValueError("Code bayad yek adad 10 raghami bashad.")
-        if len(set(code)) == 1: 
-            raise ValueError("Code nabayad daraye adad yeksan bashad.")
-        total = sum(int(digit) * (10 - index) for index, digit in enumerate(code[:-1]))
-        reminder = total % 11
-
-        check_digit = int(code[-1])
-        try : 
-            if (reminder < 2 and check_digit == reminder) or (reminder >= 2 and check_digit == 11 - reminder):
-                raise Exception
-        except Exception : 
-            print("Code vared shode motabar hast..:)")
-        else : 
-            return True
-
     @classmethod 
     def set_zarayeb_rotbebandi(cls, a1: float, a2: float, b1: float, c1: float, c2: float) :
         cls.a1 = a1
@@ -91,6 +76,7 @@ class Darmangar:
         cls.c1 = c1
         cls.c2 = c2
 
+## Create a new class 3
 @dataclass
 class Moraje:
     clinic : Clinic
@@ -103,7 +89,7 @@ class Moraje:
     noe_tarh : str
 
     def sabt_moraje(self):
-        if self.code not in self.clinic.morajein.keys() : 
+        if self.code not in self.clinic.morajein.keys() and barresi_code(self.code) is True : 
             self.clinic.morajein[self.code] = self.first_name + " " + self.last_name
         else : 
             print('{} dar list morajein hast..!'.format(self.first_name, self.last_name))
@@ -151,6 +137,7 @@ class Moraje:
         print("Deleted Vaziat!")
         self._vaziat = None
 
+## Create a new class 4
 @dataclass 
 class Jalase: 
     clinic : Clinic
@@ -166,32 +153,3 @@ class Jalase:
         self.clinic.jalasat[self.darmangar.code][self.moraje.code].append([index, self.tarikh, self.vaziat_darmangar, self.vaziat_moraje])
         logger.info('Jalase Bargozar Shodeh : {} - {} {} - {} {} - {} {}'.format(self.clinic.name, self.darmangar.first_name, self.darmangar.last_name, self.moraje.first_name, self.moraje.last_name, self.vaziat_darmangar, self.vaziat_moraje))
 
-
-def main():
-    cl_1 = Clinic("Khane Roshd")
-    dr_1 = Darmangar(cl_1, "mamad", "ahmadi", "2110566450", 911512615, "kardarnmani", 5)
-    dr_2 = Darmangar(cl_1, "mahdi", "ahmadi", "2110236728", 915512615, "goftardarmani", 3)
-    dr_1.sabt_darmangar()
-    dr_2.sabt_darmangar()
-    mr_1 = Moraje(cl_1, dr_1, "saeed", "mortazavi", "2121061185", 9122154789, "loknat","Hami")
-    mr_2 = Moraje(cl_1, dr_1, "javid", "mortazavi", "2110566789", 9132154789, "loknat","Jame")
-    mr_1.sabt_moraje()
-    mr_2.sabt_moraje()
-    j_1 = Jalase(cl_1, dr_1, mr_1,True,False)
-    j_2 = Jalase(cl_1, dr_1, mr_1,False,True)
-    j_3 = Jalase(cl_1, dr_1, mr_1,False,True)
-    j_4 = Jalase(cl_1, dr_1, mr_1,True,True)
-    j_5 = Jalase(cl_1, dr_2, mr_1,True,True)
-    j_1.sabt_jalaseh()
-    j_2.sabt_jalaseh()
-    j_3.sabt_jalaseh()
-    j_4.sabt_jalaseh()
-    j_5.sabt_jalaseh()
-    mr_1.vaziat = 'Erjaei'
-    print(mr_1.vaziat)
-    print(cl_1.jalasat)
-    print(dr_1.tedad_gheibat())
-
-
-if __name__ == "__main__":
-    main()
