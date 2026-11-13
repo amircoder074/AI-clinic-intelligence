@@ -1,5 +1,5 @@
 import unittest
-from Clinic_Analytics import Clinic, Darmangar, Moraje, Jalase
+from src.Clinic_Analytics import Clinic, Darmangar, Moraje, Jalase
 
 class TestClinic_Analytics(unittest.TestCase) :
 
@@ -42,6 +42,3 @@ class TestClinic_Analytics(unittest.TestCase) :
     def test_Darmangar_tedad_gheibat(self):
         print("test_Darmangar_tedad_gheibat")
         self.assertEqual(self.darmangar.tedad_gheibat(self.clinic, "M001"),1)
-
-if __name__ == "__main__":
-    unittest.main()
